@@ -6,7 +6,9 @@ from PyQt5.QtGui import QPixmap
 
 class sliderControl(QWidget):
 
-    FONT = QtGui.QFont('Comic Sans MS', 12)
+    TEXT_FONT = QtGui.QFont('Helvetica', 10)
+    VALUE_FONT = QtGui.QFont('Helvetica', 11)
+    DESC_FONT = QtGui.QFont('Helvetica', 8)
 
     SMOOTH_VALUE = {False: lambda l, v, step: l.setText(str(step*(v // step))),
               True: lambda l, v, step: l.setText(str(v))}
@@ -21,7 +23,7 @@ class sliderControl(QWidget):
         super().__init__()
         self.addSlider(**kwargs)
 
-    def addSlider(self, pin=11, ptype='d', initial_value=0, range=(0,255,1), inverse=False, name='Sample slider', smooth=True):
+    def addSlider(self, pin=11, ptype='d', initial_value=0, range=(0,255,15), inverse=False, name='Sample slider', smooth=True, desc='Sample text'):
 
         # Link arduino pin and slider, define inversed or not
         self.pin = pin
@@ -30,15 +32,15 @@ class sliderControl(QWidget):
 
         # Add slider name label
         self.name_label = QLabel(name, self)
-        self.name_label.setAlignment(Qt.AlignCenter | Qt.AlignTop)
+        self.name_label.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
         self.name_label.setMinimumWidth(100)
-        self.name_label.setFont(sliderControl.FONT)
+        self.name_label.setFont(sliderControl.TEXT_FONT)
 
         # Add value displaying
         self.value_label = QLabel(str(initial_value), self)
         self.value_label.setAlignment(Qt.AlignCenter | Qt.AlignTop)
         self.value_label.setMinimumWidth(80)
-        self.value_label.setFont(sliderControl.FONT)
+        self.value_label.setFont(sliderControl.VALUE_FONT)
 
         # Add slider
         self.slider = QSlider(Qt.Horizontal, self)
@@ -50,19 +52,33 @@ class sliderControl(QWidget):
         self.slider.setFocusPolicy(Qt.NoFocus)
         self.slider.setPageStep(self.step)
         self.slider.setValue(initial_value)
-        self.slider.setTickInterval(self.step if self.step > 16 else 16)
+        self.slider.setTickInterval(self.step if self.step > 15 else 15)
         self.slider.setTickPosition(QSlider.TicksBothSides)
         self.slider.setSingleStep(self.step)
         self.slider.valueChanged.connect(self.changeValue)
 
 
         # Add slider container and append components
-        self.container = QHBoxLayout()
-        self.container.addWidget(self.name_label)
-        self.container.addSpacing(15)
-        self.container.addWidget(self.slider)
-        self.container.addSpacing(15)
-        self.container.addWidget(self.value_label)
+        self.container = QVBoxLayout()
+        self.slider_box = QHBoxLayout()
+        self.slider_box.addSpacing(15)
+        self.slider_box.addWidget(self.name_label)
+        self.slider_box.addSpacing(15)
+        self.slider_box.addWidget(self.slider)
+        self.slider_box.addSpacing(15)
+        self.slider_box.addWidget(self.value_label)
+
+        text_box = QHBoxLayout()
+        test_text = QLabel(desc, self)
+        test_text.setFont(sliderControl.DESC_FONT)
+        test_text.setAlignment(Qt.AlignLeft | Qt.AlignTop)
+        test_text.setMaximumWidth(500)
+        test_text.setWordWrap(True)
+        text_box.addSpacing(15)
+        text_box.addWidget(test_text)
+
+        self.container.addLayout(self.slider_box)
+        self.container.addLayout(text_box)
 
     def changeValue(self, value, board=None):
 

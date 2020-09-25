@@ -9,11 +9,9 @@ class mainWindow(QWidget):
 
     def __init__(self, **kwargs):
         super().__init__()
-        # self.board = board
-        # self.board.set_pin_mode_pwm_output(pwmUI.OUTPUT_PIN)
         self.initWindow(**kwargs)
 
-    def initWindow(self, components=None):
+    def initWindow(self, components=None, title='Sample title'):
 
         mainWindow = QVBoxLayout()
 
@@ -23,7 +21,6 @@ class mainWindow(QWidget):
 
         self.setLayout(mainWindow)
 
-        self.setGeometry(300, 300, 500, 400)
+        self.setGeometry(300, 300, 500, 300)
         self.setWindowIcon(QtGui.QIcon('logo.png'))
-        self.setWindowTitle('Sample title')
-        self.show()
+        self.setWindowTitle(title)
