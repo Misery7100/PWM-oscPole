@@ -13,8 +13,8 @@ class selectControl(QWidget):
 
     def addSelect(self, name='Sample select', items=('Sample item')):
 
-        self.select = QComboBox(self)
-        self.select.addItems(items)
+        self._select = QComboBox(self)
+        self._select.addItems(items)
 
         self.container = QHBoxLayout()
-        self.container.addWidget(self.select)
+        self.container.addWidget(self._select)

@@ -13,13 +13,13 @@ class mainWindow(QWidget):
 
     def initWindow(self, components=None, title='Sample title'):
 
-        self.layout = QVBoxLayout()
+        self.__layout = QVBoxLayout()
 
         if not components is None:
             for component in components:
-                self.layout.addLayout(component.container)
+                self.__layout.addLayout(component.container)
 
-        self.setLayout(self.layout)
+        self.setLayout(self.__layout)
         self.setGeometry(300, 300, 500, 300)
         self.setWindowIcon(QtGui.QIcon('logo.png'))
         self.setWindowTitle(title)
