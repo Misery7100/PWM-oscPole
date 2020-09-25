@@ -1,6 +1,6 @@
-from components import mainWindow, sliderControl
+from components import mainWindow, sliderControl, selectControl
+from style import windows
 from PyQt5.QtWidgets import QApplication
-from custom_packages.qtmodern import windows
 import sys
 
 
@@ -21,7 +21,6 @@ def main():
                                                'by tick step. Tick step is 1/15 of PWM maximum value.', smooth=False)
 
     window = mainWindow.mainWindow(components = (slider_osc, slider_damp), title='PWM oscPole')
-
     mw = windows.ModernWindow(window)
     mw.show()
 

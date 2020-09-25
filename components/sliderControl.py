@@ -1,14 +1,13 @@
-from PyQt5.QtWidgets import (QWidget, QSlider, QHBoxLayout, QVBoxLayout, QGridLayout, QLabel)
+from PyQt5.QtWidgets import (QWidget, QSlider, QHBoxLayout, QVBoxLayout, QGridLayout, QLabel, QPushButton)
 from PyQt5.QtCore import Qt
-from PyQt5 import QtGui
 # from pymata4 import pymata4
-from PyQt5.QtGui import QPixmap
+from PyQt5.QtGui import QPixmap, QCursor, QFont
 
 class sliderControl(QWidget):
 
-    TEXT_FONT = QtGui.QFont('Helvetica', 10)
-    VALUE_FONT = QtGui.QFont('Helvetica', 11)
-    DESC_FONT = QtGui.QFont('Helvetica', 8)
+    TEXT_FONT = QFont('Helvetica', 10)
+    VALUE_FONT = QFont('Helvetica', 11)
+    DESC_FONT = QFont('Helvetica', 8)
 
     SMOOTH_VALUE = {False: lambda l, v, step: l.setText(str(step*(v // step))),
               True: lambda l, v, step: l.setText(str(v))}
@@ -39,7 +38,7 @@ class sliderControl(QWidget):
         # Add value displaying
         self.value_label = QLabel(str(initial_value), self)
         self.value_label.setAlignment(Qt.AlignCenter | Qt.AlignTop)
-        self.value_label.setMinimumWidth(80)
+        self.value_label.setMinimumWidth(50)
         self.value_label.setFont(sliderControl.VALUE_FONT)
 
         # Add slider
@@ -57,16 +56,29 @@ class sliderControl(QWidget):
         self.slider.setSingleStep(self.step)
         self.slider.valueChanged.connect(self.changeValue)
 
+        self.plus_btn = QPushButton('+', self)
+        self.plus_btn.setMaximumWidth(20)
+        self.plus_btn.clicked.connect(self.plusValue)
+        self.plus_btn.setCursor(QCursor(Qt.PointingHandCursor))
+
+        self.minus_btn = QPushButton('-', self)
+        self.minus_btn.setMaximumWidth(20)
+        self.minus_btn.clicked.connect(self.minusValue)
+        self.minus_btn.setCursor(QCursor(Qt.PointingHandCursor))
+
 
         # Add slider container and append components
         self.container = QVBoxLayout()
+
         self.slider_box = QHBoxLayout()
         self.slider_box.addSpacing(15)
         self.slider_box.addWidget(self.name_label)
         self.slider_box.addSpacing(15)
         self.slider_box.addWidget(self.slider)
         self.slider_box.addSpacing(15)
+        self.slider_box.addWidget(self.plus_btn)
         self.slider_box.addWidget(self.value_label)
+        self.slider_box.addWidget(self.minus_btn)
 
         text_box = QHBoxLayout()
         test_text = QLabel(desc, self)
@@ -78,7 +90,9 @@ class sliderControl(QWidget):
         text_box.addWidget(test_text)
 
         self.container.addLayout(self.slider_box)
+        self.container.addSpacing(15)
         self.container.addLayout(text_box)
+        self.container.setAlignment(Qt.AlignCenter)
 
     def changeValue(self, value, board=None):
 
@@ -88,3 +102,13 @@ class sliderControl(QWidget):
 
         # This shit update pwm value for Arduino
         # sliderControl.PWM_WRITE[self.inverse](self.board, self.pin, value, self.range[1])
+
+    def plusValue(self):
+        current_value = self.slider.value()
+        if current_value < self.range[1]:
+            self.slider.setValue(current_value + self.step)
+
+    def minusValue(self):
+        current_value = self.slider.value()
+        if current_value > self.range[0]:
+            self.slider.setValue(current_value - self.step)
