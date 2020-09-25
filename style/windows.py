@@ -1,11 +1,8 @@
 from qtpy.QtCore import Qt, QMetaObject, Signal, Slot
 from qtpy.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QToolButton,
                             QLabel, QSizePolicy)
-from ._utils import QT_VERSION, PLATFORM, resource_path
 
-
-_FL_STYLESHEET = resource_path('resources/frameless.qss')
-""" str: Frameless window stylesheet. """
+from .stylesheet import STYLE
 
 
 class WindowDragger(QWidget):
@@ -75,6 +72,8 @@ class ModernWindow(QWidget):
 
         self.windowFrame = QWidget(self)
         self.windowFrame.setObjectName('windowFrame')
+        # self.windowFrame.setStyleSheet("border-radius: 5px 5px 5px 5px;"
+        #                                "background-color: palette(Window)")
 
         self.vboxFrame = QVBoxLayout(self.windowFrame)
         self.vboxFrame.setContentsMargins(0, 0, 0, 0)
@@ -100,11 +99,11 @@ class ModernWindow(QWidget):
 
         self.btnRestore = QToolButton(self.titleBar)
         self.btnRestore.setObjectName('btnRestore')
-        self.btnRestore.setSizePolicy(spButtons)
+        # self.btnRestore.setSizePolicy(spButtons)
 
         self.btnMaximize = QToolButton(self.titleBar)
         self.btnMaximize.setObjectName('btnMaximize')
-        self.btnMaximize.setSizePolicy(spButtons)
+        # self.btnMaximize.setSizePolicy(spButtons)
 
         self.btnClose = QToolButton(self.titleBar)
         self.btnClose.setObjectName('btnClose')
@@ -117,29 +116,21 @@ class ModernWindow(QWidget):
 
         self.vboxWindow.addWidget(self.windowFrame)
 
-        if PLATFORM == "Darwin":
-            self.hboxTitle.addWidget(self.btnClose)
-            self.hboxTitle.addWidget(self.btnMinimize)
-            self.hboxTitle.addWidget(self.btnRestore)
-            self.hboxTitle.addWidget(self.btnMaximize)
-            self.hboxTitle.addWidget(self.lblTitle)
-        else:
-            self.hboxTitle.addWidget(self.lblTitle)
-            self.hboxTitle.addWidget(self.btnMinimize)
-            self.hboxTitle.addWidget(self.btnRestore)
-            self.hboxTitle.addWidget(self.btnMaximize)
-            self.hboxTitle.addWidget(self.btnClose)
+        self.hboxTitle.addWidget(self.lblTitle)
+        self.hboxTitle.addWidget(self.btnMinimize)
+        # self.hboxTitle.addWidget(self.btnRestore)
+        # self.hboxTitle.addWidget(self.btnMaximize)
+        self.hboxTitle.addWidget(self.btnClose)
 
         # set window flags
         self.setWindowFlags(Qt.Window | Qt.FramelessWindowHint | Qt.WindowSystemMenuHint | Qt.WindowCloseButtonHint |
                             Qt.WindowMinimizeButtonHint | Qt.WindowMaximizeButtonHint)
 
-        if QT_VERSION >= (5,):
-            self.setAttribute(Qt.WA_TranslucentBackground)
+        # if QT_VERSION >= (5,):
+        self.setAttribute(Qt.WA_TranslucentBackground)
 
         # set stylesheet
-        with open(_FL_STYLESHEET) as stylesheet:
-            self.setStyleSheet(stylesheet.read())
+        self.setStyleSheet(STYLE)
 
         # automatically connect slots
         QMetaObject.connectSlotsByName(self)
@@ -245,9 +236,9 @@ class ModernWindow(QWidget):
     def on_btnClose_clicked(self):
         self.close()
 
-    @Slot()
-    def on_titleBar_doubleClicked(self):
-        if not bool(self.windowState() & Qt.WindowMaximized):
-            self.on_btnMaximize_clicked()
-        else:
-            self.on_btnRestore_clicked()
+    # @Slot()
+    # def on_titleBar_doubleClicked(self):
+    #     if not bool(self.windowState() & Qt.WindowMaximized):
+    #         self.on_btnMaximize_clicked()
+    #     else:
+    #         self.on_btnRestore_clicked()
