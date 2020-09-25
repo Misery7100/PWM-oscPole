@@ -2,6 +2,7 @@ from qtpy.QtCore import Qt, QMetaObject, Signal, Slot
 from qtpy.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QToolButton,
                             QLabel, QSizePolicy)
 
+
 from .stylesheet import STYLE
 
 
@@ -50,10 +51,11 @@ class ModernWindow(QWidget):
         QWidget.__init__(self, parent)
 
         self._w = w
+        self.layout = w.layout
         self.setupUi()
 
         contentLayout = QHBoxLayout()
-        contentLayout.setContentsMargins(0, 0, 0, 0)
+        contentLayout.setContentsMargins(10, 10, 10, 10)
         contentLayout.addWidget(w)
 
         self.windowContent.setLayout(contentLayout)

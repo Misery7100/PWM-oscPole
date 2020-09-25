@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import (QWidget, QSlider, QHBoxLayout, QVBoxLayout, QGridLayout, QLabel, QPushButton)
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QTimer
 # from pymata4 import pymata4
 from PyQt5.QtGui import QPixmap, QCursor, QFont
 
@@ -37,7 +37,7 @@ class sliderControl(QWidget):
 
         # Add value displaying
         self.value_label = QLabel(str(initial_value), self)
-        self.value_label.setAlignment(Qt.AlignCenter | Qt.AlignTop)
+        self.value_label.setAlignment(Qt.AlignCenter)
         self.value_label.setMinimumWidth(50)
         self.value_label.setFont(sliderControl.VALUE_FONT)
 
@@ -55,15 +55,35 @@ class sliderControl(QWidget):
         self.slider.setTickPosition(QSlider.TicksBothSides)
         self.slider.setSingleStep(self.step)
         self.slider.valueChanged.connect(self.changeValue)
+        self.slider.setMaximumWidth(200)
+        self.slider.setMinimumWidth(200)
+
+        self.timers = [QTimer(), QTimer()]
+        for timer in self.timers:
+            timer.setInterval(50)
+
+        self.timers[0].timeout.connect(lambda: self.slider.setValue(self.slider.value() - self.step))
+        self.timers[1].timeout.connect(lambda: self.slider.setValue(self.slider.value() + self.step))
+
+        self.delays = [QTimer(), QTimer()]
+        for timer in self.delays:
+            timer.setSingleShot(True)
+            timer.setInterval(600)
+
+        self.delays[0].timeout.connect(lambda: self.timers[0].start())
+        self.delays[1].timeout.connect(lambda: self.timers[1].start())
 
         self.plus_btn = QPushButton('+', self)
         self.plus_btn.setMaximumWidth(20)
-        self.plus_btn.clicked.connect(self.plusValue)
+        self.plus_btn.pressed.connect(self.plusStart)
+        self.plus_btn.released.connect(self.plusStop)
         self.plus_btn.setCursor(QCursor(Qt.PointingHandCursor))
 
         self.minus_btn = QPushButton('-', self)
         self.minus_btn.setMaximumWidth(20)
-        self.minus_btn.clicked.connect(self.minusValue)
+        self.minus_btn.pressed.connect(self.minusStart)
+        self.minus_btn.released.connect(self.minusStop)
+        self.minus_btn.released.connect(lambda: self.timers[0].stop())
         self.minus_btn.setCursor(QCursor(Qt.PointingHandCursor))
 
 
@@ -71,14 +91,13 @@ class sliderControl(QWidget):
         self.container = QVBoxLayout()
 
         self.slider_box = QHBoxLayout()
-        self.slider_box.addSpacing(15)
         self.slider_box.addWidget(self.name_label)
         self.slider_box.addSpacing(15)
         self.slider_box.addWidget(self.slider)
         self.slider_box.addSpacing(15)
-        self.slider_box.addWidget(self.plus_btn)
-        self.slider_box.addWidget(self.value_label)
         self.slider_box.addWidget(self.minus_btn)
+        self.slider_box.addWidget(self.value_label)
+        self.slider_box.addWidget(self.plus_btn)
 
         text_box = QHBoxLayout()
         test_text = QLabel(desc, self)
@@ -86,7 +105,6 @@ class sliderControl(QWidget):
         test_text.setAlignment(Qt.AlignLeft | Qt.AlignTop)
         test_text.setMaximumWidth(500)
         test_text.setWordWrap(True)
-        text_box.addSpacing(15)
         text_box.addWidget(test_text)
 
         self.container.addLayout(self.slider_box)
@@ -102,13 +120,27 @@ class sliderControl(QWidget):
 
         # This shit update pwm value for Arduino
         # sliderControl.PWM_WRITE[self.inverse](self.board, self.pin, value, self.range[1])
+    def plusStart(self):
+        self.slider.setValue(self.slider.value() + self.step)
+        self.delays[1].start()
 
-    def plusValue(self):
-        current_value = self.slider.value()
-        if current_value < self.range[1]:
-            self.slider.setValue(current_value + self.step)
+    def minusStart(self):
+        self.slider.setValue(self.slider.value() - self.step)
+        self.delays[0].start()
 
-    def minusValue(self):
-        current_value = self.slider.value()
-        if current_value > self.range[0]:
-            self.slider.setValue(current_value - self.step)
+    def plusStop(self):
+        self.delays[1].stop()
+        self.timers[1].stop()
+
+    def minusStop(self):
+        self.delays[0].stop()
+        self.timers[0].stop()
+
+    # def plusValue(self):
+    #     self.slider.setValue(self.slider.value() + self.step)
+    #     # if current_value < self.range[1]:
+    #     #     self.slider.setValue(current_value + self.step)
+    #
+    #
+    # def minusValue(self):
+    #     self.slider.setValue(self.slider.value() - self.step)
