@@ -5,9 +5,10 @@ from PyQt5.QtGui import QPixmap, QCursor, QFont
 
 class sliderControl(QWidget):
 
-    _TEXT_FONT = QFont('Helvetica', 10)
-    _VALUE_FONT = QFont('Helvetica', 11)
-    _DESC_FONT = QFont('Helvetica', 8)
+    _TEXT_FONT = QFont("Roboto", 11, 500)
+    _VALUE_FONT = QFont("Roboto", 12, 500)
+    # _DESC_FONT = QFont('Helvetica [Cronyx]', 9)
+    _DESC_FONT = QFont("Roboto", 10)
 
     __SMOOTH_VALUE = {False: lambda l, v, step: l.setText(str(step*(v // step))),
               True: lambda l, v, step: l.setText(str(v))}
@@ -32,14 +33,17 @@ class sliderControl(QWidget):
         # Add slider name label
         name_label = QLabel(name, self)
         name_label.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
-        name_label.setMinimumWidth(100)
+        name_label.setMinimumWidth(120)
+        name_label.setMaximumWidth(120)
         name_label.setFont(sliderControl._TEXT_FONT)
+        name_label.setStyleSheet('color: rgb(20, 20, 20);')
 
         # Add value displaying
         self._value_label = QLabel(str(initial_value), self)
         self._value_label.setAlignment(Qt.AlignCenter)
         self._value_label.setMinimumWidth(50)
         self._value_label.setFont(sliderControl._VALUE_FONT)
+        self._value_label.setStyleSheet('color: rgb(30, 30, 30);')
 
         # Add slider
         self._slider = QSlider(Qt.Horizontal, self)
@@ -100,6 +104,7 @@ class sliderControl(QWidget):
         description.setAlignment(Qt.AlignLeft | Qt.AlignTop)
         description.setMaximumWidth(500)
         description.setWordWrap(True)
+        description.setStyleSheet('color: rgb(50, 50, 50);')
         desc_box = QHBoxLayout()
         desc_box.addWidget(description)
 

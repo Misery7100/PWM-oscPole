@@ -1,6 +1,7 @@
 from qtpy.QtCore import Qt, QMetaObject, Signal, Slot
 from qtpy.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QToolButton,
                             QLabel, QSizePolicy)
+from qtpy.QtGui import QFont
 
 
 from .stylesheet import STYLE
@@ -55,7 +56,7 @@ class ModernWindow(QWidget):
         self.setupUi()
 
         contentLayout = QHBoxLayout()
-        contentLayout.setContentsMargins(10, 10, 10, 10)
+        contentLayout.setContentsMargins(15, 15, 15, 15)
         contentLayout.addWidget(w)
 
         self.windowContent.setLayout(contentLayout)
@@ -84,6 +85,7 @@ class ModernWindow(QWidget):
         self.titleBar.setObjectName('titleBar')
         self.titleBar.setSizePolicy(QSizePolicy(QSizePolicy.Preferred,
                                                 QSizePolicy.Fixed))
+        self.titleBar.setFont(QFont('Roboto'))
 
         self.hboxTitle = QHBoxLayout(self.titleBar)
         self.hboxTitle.setContentsMargins(0, 0, 0, 0)

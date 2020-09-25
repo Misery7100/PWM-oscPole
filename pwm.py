@@ -1,6 +1,7 @@
 from components import mainWindow, sliderControl, selectControl
 from style import windows
 from PyQt5.QtWidgets import QApplication
+from PyQt5 import QtCore, QtGui
 import sys
 
 
@@ -9,6 +10,7 @@ def main():
     # board = pymata4.Pymata4()
     app = QApplication(sys.argv)
     app.setStyle('Fusion')
+    _ = QtGui.QFontDatabase.addApplicationFont("style/Roboto-Light.ttf")
 
     slider_osc = sliderControl.sliderControl(pin=11, initial_value=0, name='Osc amplitude', range=(0,255,1),
                                           desc='PWM control for a torsion oscillator driving force. Smooth changing.'

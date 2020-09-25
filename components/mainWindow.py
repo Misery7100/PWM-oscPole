@@ -20,6 +20,6 @@ class mainWindow(QWidget):
                 self.__layout.addLayout(component.container)
 
         self.setLayout(self.__layout)
-        self.setGeometry(300, 300, 500, 300)
+        self.setGeometry(300, 300, 500, 350)
         self.setWindowIcon(QtGui.QIcon('logo.png'))
         self.setWindowTitle(title)
