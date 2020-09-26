@@ -5,7 +5,7 @@
 STYLE = '#windowFrame {\
   border: 0px solid rgb(218, 218, 218);\
   border-radius: 8px 8px 8px 8px;\
-  background: qlineargradient( x1:0 y1:0, x2:0 y2:1, stop:0 rgb(243, 243, 243), stop:1 rgb(232, 232, 232));\
+  background: qlineargradient( x1:0 y1:0, x2:0 y2:1, stop:0 rgb(243, 243, 243), stop:1 rgb(226, 226, 226));\
 }\
 #nameLabel {\
   color: rgb(20, 20, 20);\

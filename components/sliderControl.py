@@ -112,7 +112,7 @@ class sliderControl(QWidget):
             self._description.setStyleSheet(
                                   'color: rgb(50, 50, 50); '
                                   'padding-top: 15px;'
-                                  'padding-bottom: 10px;'
+                                  'padding-bottom: 5px;'
                                   )
         else:
             self._description.setStyleSheet(
@@ -122,7 +122,7 @@ class sliderControl(QWidget):
                 'border-bottom: 1px solid qlineargradient( x1:0 y1:0, x2:1 y2:0, stop:0 rgb(238, 238, 238),'
                 'stop:0.2 rgb(212, 212, 212), stop:0.8 rgb(212, 212, 212), stop:1 rgb(238, 238, 238));'
                 'padding-top: 15px;'
-                'padding-bottom: 15px;'
+                'padding-bottom: 20px;'
             )
 
         self._description.setVisible(False)
