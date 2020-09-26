@@ -119,8 +119,8 @@ class sliderControl(QWidget):
                 'color: rgb(50, 50, 50); '
                 'border-top: 0px solid qlineargradient( x1:0 y1:0, x2:1 y2:0, stop:0 rgb(230, 230, 230),'
                 'stop:0.1 rgb(212, 212, 212), stop:0.9 rgb(212, 212, 212), stop:1 rgb(230, 230, 230));'
-                'border-bottom: 1px solid qlineargradient( x1:0 y1:0, x2:1 y2:0, stop:0 rgb(230, 230, 230),'
-                'stop:0.3 rgb(212, 212, 212), stop:0.7 rgb(212, 212, 212), stop:1 rgb(230, 230, 230));'
+                'border-bottom: 1px solid qlineargradient( x1:0 y1:0, x2:1 y2:0, stop:0 rgb(238, 238, 238),'
+                'stop:0.2 rgb(212, 212, 212), stop:0.8 rgb(212, 212, 212), stop:1 rgb(238, 238, 238));'
                 'padding-top: 15px;'
                 'padding-bottom: 15px;'
             )
