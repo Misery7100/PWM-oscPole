@@ -22,21 +22,24 @@ class sliderControl(QWidget):
     def __init__(self, **kwargs):
         super().__init__()
         self.addSlider(**kwargs)
+        self.__window = None
 
     def addSlider(self, pin=11, ptype='d', initial_value=0, range=(0,255,15), inverse=False, name='Sample slider', smooth=True, desc='Sample text'):
-
         # Link arduino pin and slider, define inversed or not
         self.__pin = pin
         self.__ptype = ptype
         self.__inverse = inverse
 
         # Add slider name label
-        name_label = QLabel(name, self)
-        name_label.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
+        name_label = QPushButton(name, self)
+        # name_label.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
         name_label.setMinimumWidth(120)
         name_label.setMaximumWidth(120)
         name_label.setFont(sliderControl._TEXT_FONT)
-        name_label.setStyleSheet('color: rgb(20, 20, 20);')
+        name_label.setObjectName('nameLabel')
+        name_label.setCursor(QCursor(Qt.PointingHandCursor))
+        name_label.clicked.connect(self.__toggleVisible)
+        # name_label.setStyleSheet('color: rgb(20, 20, 20); background-color: none; border: 0px none black; text-align: left;')
 
         # Add value displaying
         self._value_label = QLabel(str(initial_value), self)
@@ -99,20 +102,27 @@ class sliderControl(QWidget):
         slider_box.addWidget(self._value_label)
         slider_box.addWidget(plus_btn)
 
-        description = QLabel(desc, self)
-        description.setFont(sliderControl._DESC_FONT)
-        description.setAlignment(Qt.AlignLeft | Qt.AlignTop)
-        description.setMaximumWidth(500)
-        description.setWordWrap(True)
-        description.setStyleSheet('color: rgb(50, 50, 50);')
+        self._description = QLabel(desc, self)
+        self._description.setFont(sliderControl._DESC_FONT)
+        self._description.setAlignment(Qt.AlignLeft | Qt.AlignTop)
+        self._description.setMaximumWidth(500)
+        self._description.setWordWrap(True)
+        self._description.setStyleSheet(
+                                  'color: rgb(50, 50, 50); '
+                                  'border-top: 1px solid qlineargradient( x1:0 y1:0, x2:1 y2:0, stop:0 rgb(212, 212, 212), stop:0.4 rgb(222, 222, 222), stop:1 rgb(230, 230, 230));'
+                                  'padding-top: 15px;'
+                                  'padding-bottom: 10px;'
+                                  )
+        self._description.setVisible(False)
+
         desc_box = QHBoxLayout()
-        desc_box.addWidget(description)
+        desc_box.addWidget(self._description)
 
         self.container = QVBoxLayout()
         self.container.addLayout(slider_box)
-        self.container.addSpacing(15)
+        self.container.addSpacing(10)
         self.container.addLayout(desc_box)
-        self.container.setAlignment(Qt.AlignCenter)
+        # self.container.setAlignment(Qt.AlignTop)
 
     def __changeValue(self, value, board=None):
 
@@ -138,3 +148,9 @@ class sliderControl(QWidget):
     def __minusStop(self):
         self.__delays[0].stop()
         self.__timers[0].stop()
+
+    def __toggleVisible(self):
+        if self._description.isVisible():
+            self._description.setVisible(False)
+        else:
+            self._description.setVisible(True)

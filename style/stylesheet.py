@@ -7,6 +7,11 @@ STYLE = '#windowFrame {\
   border-radius: 8px 8px 8px 8px;\
   background: qlineargradient( x1:0 y1:0, x2:0 y2:1, stop:0 rgb(243, 243, 243), stop:1 rgb(232, 232, 232));\
 }\
+#nameLabel {\
+  color: rgb(20, 20, 20);\
+  background-color: none;\
+  border: 0px none black;\
+  text-align: left;}\
 \
 #titleBar {\
   border: 0px none palette(base);\

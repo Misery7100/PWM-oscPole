@@ -2,7 +2,7 @@ from PyQt5.QtWidgets import (QWidget, QSlider, QHBoxLayout, QVBoxLayout, QGridLa
 from PyQt5.QtCore import Qt
 from PyQt5 import QtGui
 # from pymata4 import pymata4
-from PyQt5.QtGui import QPixmap
+from PyQt5.QtGui import QPixmap, QFont
 
 class mainWindow(QWidget):
 
@@ -13,13 +13,22 @@ class mainWindow(QWidget):
 
     def initWindow(self, components=None, title='Sample title'):
 
-        self.__layout = QVBoxLayout()
+        self._layout = QVBoxLayout()
 
         if not components is None:
             for component in components:
-                self.__layout.addLayout(component.container)
+                self._layout.addLayout(component.container)
 
-        self.setLayout(self.__layout)
-        self.setGeometry(300, 300, 500, 350)
+        cr = QLabel('© Saint Petersburg State University, 2020',self)
+        cr.setFont(QFont('Roboto', 8))
+        cr.setAlignment(Qt.AlignRight | Qt.AlignBottom)
+        cr.setFixedHeight(20)
+        cr.setStyleSheet('color: rgb(130, 130, 130);')
+        cr_ly = QHBoxLayout()
+        cr_ly.addWidget(cr)
+
+        self._layout.addLayout(cr_ly)
+        self.setLayout(self._layout)
+        self.setGeometry(600, 200, 500, 500)
         self.setWindowIcon(QtGui.QIcon('logo.png'))
         self.setWindowTitle(title)

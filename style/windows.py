@@ -63,7 +63,6 @@ class ModernWindow(QWidget):
 
         self.setWindowTitle(w.windowTitle())
         self.setGeometry(w.geometry())
-
         # Adding attribute to clean up the parent window when the child is closed
         self._w.setAttribute(Qt.WA_DeleteOnClose, True)
         self._w.destroyed.connect(self.__child_was_closed)
@@ -71,12 +70,11 @@ class ModernWindow(QWidget):
     def setupUi(self):
         # create title bar, content
         self.vboxWindow = QVBoxLayout(self)
+
         self.vboxWindow.setContentsMargins(0, 0, 0, 0)
 
         self.windowFrame = QWidget(self)
         self.windowFrame.setObjectName('windowFrame')
-        # self.windowFrame.setStyleSheet("border-radius: 5px 5px 5px 5px;"
-        #                                "background-color: palette(Window)")
 
         self.vboxFrame = QVBoxLayout(self.windowFrame)
         self.vboxFrame.setContentsMargins(0, 0, 0, 0)
@@ -119,6 +117,7 @@ class ModernWindow(QWidget):
         self.vboxFrame.addWidget(self.windowContent)
 
         self.vboxWindow.addWidget(self.windowFrame)
+        self.vboxWindow.addStretch(1)
 
         self.hboxTitle.addWidget(self.lblTitle)
         self.hboxTitle.addWidget(self.btnMinimize)
