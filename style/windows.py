@@ -118,7 +118,7 @@ class ModernWindow(QWidget):
         shadow.setBlurRadius(18)
         shadow.setXOffset(0)
         shadow.setYOffset(0)
-        shadow.setColor(QColor(0, 0, 0, 90))
+        shadow.setColor(QColor(0, 0, 0, 120))
 
 
         self.vboxFrame.addWidget(self.windowContent)

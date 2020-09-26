@@ -1,5 +1,5 @@
 # background-color: palette(Window); - for #windowFrame
-# border: 1px solid rgb(194, 194, 194); - for #windowFrame
+# border: 1px solid rgb(218, 218, 218); - for #windowFrame
 # background-color: hsv(38, 218, 253); - minimize btn; hsv(0, 182, 252); - close btn
 
 STYLE = '#windowFrame {\
