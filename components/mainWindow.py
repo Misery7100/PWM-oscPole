@@ -27,9 +27,8 @@ class mainWindow(QWidget):
         cr_ly = QHBoxLayout()
         cr_ly.addWidget(cr)
         cr_ly.setContentsMargins(0,5,0,0)
-
         self._layout.addLayout(cr_ly)
         self.setLayout(self._layout)
-        self.setGeometry(600, 200, 500, 500)
+        self.setGeometry(600, 200, 550, 250)
         self.setWindowIcon(QtGui.QIcon('logo.png'))
         self.setWindowTitle(title)

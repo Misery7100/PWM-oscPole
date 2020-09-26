@@ -1,7 +1,7 @@
 from qtpy.QtCore import Qt, QMetaObject, Signal, Slot
 from qtpy.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QToolButton,
-                            QLabel, QSizePolicy)
-from qtpy.QtGui import QFont
+                            QLabel, QSizePolicy, QGraphicsDropShadowEffect)
+from qtpy.QtGui import QFont, QColor
 
 
 from .stylesheet import STYLE
@@ -56,7 +56,7 @@ class ModernWindow(QWidget):
         self.setupUi()
 
         contentLayout = QHBoxLayout()
-        contentLayout.setContentsMargins(15, 0, 15, 15)
+        contentLayout.setContentsMargins(10, 0, 10, 10)
         contentLayout.addWidget(w)
 
         self.windowContent.setLayout(contentLayout)
@@ -71,7 +71,7 @@ class ModernWindow(QWidget):
         # create title bar, content
         self.vboxWindow = QVBoxLayout(self)
 
-        self.vboxWindow.setContentsMargins(0, 0, 0, 0)
+        self.vboxWindow.setContentsMargins(30, 30, 30, 30)
 
         self.windowFrame = QWidget(self)
         self.windowFrame.setObjectName('windowFrame')
@@ -114,8 +114,14 @@ class ModernWindow(QWidget):
         self.vboxFrame.addWidget(self.titleBar)
 
         self.windowContent = QWidget(self.windowFrame)
-        self.vboxFrame.addWidget(self.windowContent)
+        shadow = QGraphicsDropShadowEffect()
+        shadow.setBlurRadius(18)
+        shadow.setXOffset(0)
+        shadow.setYOffset(0)
+        shadow.setColor(QColor(0, 0, 0, 90))
 
+
+        self.vboxFrame.addWidget(self.windowContent)
         self.vboxWindow.addWidget(self.windowFrame)
         self.vboxWindow.addStretch(1)
 
@@ -131,6 +137,7 @@ class ModernWindow(QWidget):
 
         # if QT_VERSION >= (5,):
         self.setAttribute(Qt.WA_TranslucentBackground)
+        self.windowFrame.setGraphicsEffect(shadow)
 
         # set stylesheet
         self.setStyleSheet(STYLE)

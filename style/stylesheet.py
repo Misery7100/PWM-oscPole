@@ -3,7 +3,7 @@
 # background-color: hsv(38, 218, 253); - minimize btn; hsv(0, 182, 252); - close btn
 
 STYLE = '#windowFrame {\
-  border: 1px solid rgb(218, 218, 218);\
+  border: 0px solid rgb(218, 218, 218);\
   border-radius: 8px 8px 8px 8px;\
   background: qlineargradient( x1:0 y1:0, x2:0 y2:1, stop:0 rgb(243, 243, 243), stop:1 rgb(232, 232, 232));\
 }\
