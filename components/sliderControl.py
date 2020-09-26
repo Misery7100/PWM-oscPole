@@ -24,7 +24,8 @@ class sliderControl(QWidget):
         self.addSlider(**kwargs)
         self.__window = None
 
-    def addSlider(self, pin=11, ptype='d', initial_value=0, range=(0,255,15), inverse=False, name='Sample slider', smooth=True, desc='Sample text'):
+    def addSlider(self, pin=11, ptype='d', initial_value=0, range=(0,255,15), inverse=False,
+                  name='Sample slider', smooth=True, desc='Sample text', last_item=False):
         # Link arduino pin and slider, define inversed or not
         self.__pin = pin
         self.__ptype = ptype
@@ -107,21 +108,31 @@ class sliderControl(QWidget):
         self._description.setAlignment(Qt.AlignLeft | Qt.AlignTop)
         self._description.setMaximumWidth(500)
         self._description.setWordWrap(True)
-        self._description.setStyleSheet(
+        if last_item:
+            self._description.setStyleSheet(
                                   'color: rgb(50, 50, 50); '
-                                  'border-top: 1px solid qlineargradient( x1:0 y1:0, x2:1 y2:0, stop:0 rgb(230, 230, 230),'
-                                  'stop:0.1 rgb(212, 212, 212), stop:0.9 rgb(212, 212, 212), stop:1 rgb(230, 230, 230));'
                                   'padding-top: 15px;'
                                   'padding-bottom: 10px;'
                                   )
+        else:
+            self._description.setStyleSheet(
+                'color: rgb(50, 50, 50); '
+                'border-top: 0px solid qlineargradient( x1:0 y1:0, x2:1 y2:0, stop:0 rgb(230, 230, 230),'
+                'stop:0.1 rgb(212, 212, 212), stop:0.9 rgb(212, 212, 212), stop:1 rgb(230, 230, 230));'
+                'border-bottom: 1px solid qlineargradient( x1:0 y1:0, x2:1 y2:0, stop:0 rgb(230, 230, 230),'
+                'stop:0.3 rgb(212, 212, 212), stop:0.7 rgb(212, 212, 212), stop:1 rgb(230, 230, 230));'
+                'padding-top: 15px;'
+                'padding-bottom: 15px;'
+            )
+
         self._description.setVisible(False)
 
         desc_box = QHBoxLayout()
         desc_box.addWidget(self._description)
 
         self.container = QVBoxLayout()
+        self.container.addSpacing(15)
         self.container.addLayout(slider_box)
-        self.container.addSpacing(10)
         self.container.addLayout(desc_box)
         # self.container.setAlignment(Qt.AlignTop)
 

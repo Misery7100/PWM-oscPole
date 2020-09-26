@@ -26,6 +26,7 @@ class mainWindow(QWidget):
         cr.setStyleSheet('color: rgb(130, 130, 130);')
         cr_ly = QHBoxLayout()
         cr_ly.addWidget(cr)
+        cr_ly.setContentsMargins(0,5,0,0)
 
         self._layout.addLayout(cr_ly)
         self.setLayout(self._layout)

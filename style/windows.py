@@ -56,7 +56,7 @@ class ModernWindow(QWidget):
         self.setupUi()
 
         contentLayout = QHBoxLayout()
-        contentLayout.setContentsMargins(15, 15, 15, 15)
+        contentLayout.setContentsMargins(15, 0, 15, 15)
         contentLayout.addWidget(w)
 
         self.windowContent.setLayout(contentLayout)
