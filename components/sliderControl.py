@@ -109,7 +109,8 @@ class sliderControl(QWidget):
         self._description.setWordWrap(True)
         self._description.setStyleSheet(
                                   'color: rgb(50, 50, 50); '
-                                  'border-top: 1px solid qlineargradient( x1:0 y1:0, x2:1 y2:0, stop:0 rgb(212, 212, 212), stop:0.4 rgb(222, 222, 222), stop:1 rgb(230, 230, 230));'
+                                  'border-top: 1px solid qlineargradient( x1:0 y1:0, x2:1 y2:0, stop:0 rgb(230, 230, 230),'
+                                  'stop:0.1 rgb(212, 212, 212), stop:0.9 rgb(212, 212, 212), stop:1 rgb(230, 230, 230));'
                                   'padding-top: 15px;'
                                   'padding-bottom: 10px;'
                                   )
