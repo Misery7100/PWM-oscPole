@@ -5,7 +5,7 @@ from PyQt5 import QtGui
 from PyQt5.QtGui import QPixmap, QFont
 from style.global_layout import *
 
-class mainWindow(QWidget):
+class Window(QWidget):
 
 
     def __init__(self, **kwargs):

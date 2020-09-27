@@ -5,7 +5,7 @@ from PyQt5 import QtGui
 # from pymata4 import pymata4
 from PyQt5.QtGui import QPixmap
 
-class selectControl(QWidget):
+class Select(QWidget):
 
     def __init__(self, **kwargs):
         super().__init__()
