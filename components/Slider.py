@@ -12,8 +12,12 @@ class Slider(QWidget):
     __SMOOTH_SLIDER = {False: lambda s, v, step: s.setValue(step*(v // step)),
               True: lambda s, v, step: None}
 
+    # __SMOOTH_PWM = {True: lambda b, pin, v, m, step, inv: Slider.__INVERSE_PWM[inv](b, pin, v, m),
+    #                 False: lambda b, pin, v, m, step, inv: Slider.__INVERSE_PWM[inv](b, pin, step*(v // step), m)}
+    #
     # __INVERSE_PWM = {False: lambda b, pin, v, m: b.pwm_write(pin, v),
     #              True: lambda b, pin, v, m: b.pwm_write(pin, m - v)}
+
 
     def __init__(self, **kwargs):
         super().__init__()
@@ -76,7 +80,7 @@ class Slider(QWidget):
         Slider.__SMOOTH_VALUE[self.__smooth](self._value_label, value, self.__step)
 
         # This shit update pwm value for Arduino
-        # Slider.__INVERSE_PWM[self.__inverse](self.board, self.__pin, value, self.__max_val)
+        # Slider.__SMOOTH_PWM[self.__smooth](self.board, self.__pin, value, self.__max_val, self.__step, self.__inverse)
 
     def __plusStart(self):
         self._slider.setValue(self._slider.value() + self.__step)
