@@ -23,8 +23,12 @@ def main():
     slider_damp = Slider(pin=6, initial_value=0, name='Damper', range=(0,255,1),
                                 desc=DAMP_SLIDER_DESC, last_item=True)
 
-    window = ModernWindow(Window(components = (slider_osc, slider_damp), title='PWM oscPole'))
+    test = Select(items=('COM', 'CIM'))
+
+    window = ModernWindow(Window(components = (slider_osc, slider_damp), title='PWM oscPole', cright=True))
+    test_win = ModernWindow(Window(components=test, title='Test', size=(300, 300)))
     window.show()
+    test_win.show()
 
     sys.exit(app.exec_())
 
