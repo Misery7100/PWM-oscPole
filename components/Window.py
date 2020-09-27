@@ -1,13 +1,11 @@
-from PyQt5.QtWidgets import (QWidget, QSlider, QHBoxLayout, QVBoxLayout, QGridLayout, QLabel)
+from PyQt5.QtWidgets import (QWidget, QHBoxLayout, QVBoxLayout, QLabel)
 from PyQt5.QtCore import Qt
 from PyQt5 import QtGui
-# from pymata4 import pymata4
-from PyQt5.QtGui import QPixmap, QFont
 from style.global_layout import *
 
 class Window(QWidget):
 
-    COPYRIGHT = {True: lambda w: Copyright(w),
+    __COPYRIGHT = {True: lambda w: Copyright(w),
                  False: lambda w: None}
 
     def __init__(self, **kwargs):
@@ -25,7 +23,7 @@ class Window(QWidget):
                 for component in components:
                     self._layout.addLayout(component.container)
 
-        Window.COPYRIGHT[cright](self)
+        Window.__COPYRIGHT[cright](self)
 
         self.setLayout(self._layout)
         self.setGeometry(*pos, *size)
@@ -34,10 +32,10 @@ class Window(QWidget):
 
 class Copyright(QLabel):
 
-    CR = '© Saint Petersburg State University, 2020'
+    __CR = '© Saint Petersburg State University, 2020'
 
     def __init__(self, widget):
-        super().__init__(Copyright.CR, widget)
+        super().__init__(Copyright.__CR, widget)
         self.addCR(widget)
 
     def addCR(self, widget):

@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import (QWidget, QSlider, QHBoxLayout, QVBoxLayout, QGridLayout, QLabel, QPushButton)
+from PyQt5.QtWidgets import (QWidget, QSlider, QHBoxLayout, QVBoxLayout, QLabel, QPushButton)
 from PyQt5.QtCore import Qt, QTimer
 # from pymata4 import pymata4
 from PyQt5.QtGui import QCursor, QFont
@@ -144,13 +144,13 @@ class ToggleButton(QPushButton):
 
 class SliderText(QLabel):
 
-    LIMITED = {True: lambda text, w: text.setMaximumWidth(w),
+    __LIMITED = {True: lambda text, w: text.setMaximumWidth(w),
                False: lambda text, w: text.setMinimumWidth(w)}
 
-    DESCRIPRION_LAST = {True: lambda text: text.setObjectName('descriptionLast'),
+    __DESCRIPRION_LAST = {True: lambda text: text.setObjectName('descriptionLast'),
                         False: lambda text: text.setObjectName('description')}
 
-    DESCRIPTION = {True: lambda text, last: (SliderText.DESCRIPRION_LAST[last](text), text.setVisible(False)),
+    __DESCRIPTION = {True: lambda text, last: (SliderText.__DESCRIPRION_LAST[last](text), text.setVisible(False)),
                    False: lambda text, last: None}
 
     def __init__(self, label, widget, **kwargs):
@@ -165,8 +165,8 @@ class SliderText(QLabel):
         self.setFont(font)
         self.setWordWrap(word_wrap)
 
-        SliderText.LIMITED[lim](self, width)
-        SliderText.DESCRIPTION[desc](self, last)
+        SliderText.__LIMITED[lim](self, width)
+        SliderText.__DESCRIPTION[desc](self, last)
 
 class SliderControl(QSlider):
 
@@ -192,7 +192,7 @@ class SliderControl(QSlider):
 
 class TimerWithDelay():
 
-    SLIDER_EVENT = {
+    __SLIDER_EVENT = {
         '+': lambda obj, step: lambda: obj.setValue(obj.value() + step),
         '-': lambda obj, step: lambda: obj.setValue(obj.value() - step)
     }
@@ -205,7 +205,7 @@ class TimerWithDelay():
         self.timer = QTimer()
         self.timer.setInterval(timer_int)
 
-        timeout_event = TimerWithDelay.SLIDER_EVENT[direction](object, step)
+        timeout_event = TimerWithDelay.__SLIDER_EVENT[direction](object, step)
         self.timer.timeout.connect(timeout_event)
 
         self.delay = QTimer()

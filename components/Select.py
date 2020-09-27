@@ -1,9 +1,6 @@
-from PyQt5.QtWidgets import (QWidget, QSlider, QHBoxLayout, QVBoxLayout, QGridLayout, QLabel, QComboBox,
-                             QPushButton)
+from PyQt5.QtWidgets import (QWidget, QHBoxLayout, QVBoxLayout, QLabel, QComboBox)
 from PyQt5.QtCore import Qt
-from PyQt5 import QtGui
 # from pymata4 import pymata4
-from PyQt5.QtGui import QPixmap
 
 class Select(QWidget):
 
