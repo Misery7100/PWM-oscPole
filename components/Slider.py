@@ -36,7 +36,7 @@ class Slider(QWidget):
         name_label = ToggleButton(name, self, clicked=self.__toggleVisible, style='sliderLabel', width=SLIDER_LABEL_WIDTH)
 
         # Add value displaying
-        self._value_label = SliderText(str(initial_value), self, width=SLIDER_VALUE_WIDTH, style='sliderValue')
+        self._value_label = SliderText(str(initial_value), self, width=SLIDER_VALUE_WIDTH, style='sliderValue', lim=True)
 
         # Add slider
         self.__step = range[-1]
@@ -64,9 +64,11 @@ class Slider(QWidget):
         slider_box.addWidget(minus_btn)
         slider_box.addWidget(self._value_label)
         slider_box.addWidget(plus_btn)
+        slider_box.setAlignment(Qt.AlignJustify)
 
         desc_box = QHBoxLayout()
         desc_box.addWidget(self._description)
+        desc_box.setAlignment(Qt.AlignLeft)
 
         self.container = QVBoxLayout()
         self.container.addSpacing(V_SPACING)
@@ -144,7 +146,7 @@ class ToggleButton(QPushButton):
 
 class SliderText(QLabel):
 
-    __LIMITED = {True: lambda text, w: text.setMaximumWidth(w),
+    __LIMITED = {True: lambda text, w: (text.setMaximumWidth(w), text.setMinimumWidth(w)),
                False: lambda text, w: text.setMinimumWidth(w)}
 
     __DESCRIPRION_LAST = {True: lambda text: text.setObjectName('descriptionLast'),

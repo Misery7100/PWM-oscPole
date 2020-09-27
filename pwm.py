@@ -2,7 +2,6 @@ from components.Window import Window
 from components.Slider import Slider
 from components.Select import Select
 from style.windows import ModernWindow
-from assets import required
 from assets.app_text import *
 from style.global_layout import GLOBAL_STYLE
 from PyQt5.QtWidgets import QApplication
@@ -15,9 +14,7 @@ def main():
     app = QApplication(sys.argv)
     app.setStyle(GLOBAL_STYLE)
 
-    required.addRequired()
-
-    slider_osc = Slider(pin=11, initial_value=0, name='Osc amplitude', range=(0, 255, 1),
+    slider_osc = Slider(pin=11, initial_value=0, name='Osc amp', range=(0, 255, 1),
                                desc=OSC_SLIDER_DESC, inverse=True)
 
     slider_damp = Slider(pin=6, initial_value=0, name='Damper', range=(0, 255, 1),

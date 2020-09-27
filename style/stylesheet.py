@@ -8,7 +8,7 @@ STYLE = '#windowFrame {\
   background: qlineargradient( x1:0 y1:0, x2:0 y2:1, stop:0 rgb(243, 243, 243), stop:1 rgb(226, 226, 226));\
 }\
 #sliderLabel {\
-  color: rgb(20, 20, 20);\
+  color: rgb(40, 40, 40);\
   background-color: none;\
   border: 0px none black;\
   text-align: left;}\

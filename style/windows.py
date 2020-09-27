@@ -2,9 +2,8 @@ from qtpy.QtCore import Qt, QMetaObject, Signal, Slot
 from qtpy.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QToolButton,
                             QLabel, QSizePolicy, QGraphicsDropShadowEffect)
 from qtpy.QtGui import QFont, QColor
-
-
 from .stylesheet import STYLE
+from .global_layout import MAIN_FONT
 
 
 class WindowDragger(QWidget):
@@ -83,7 +82,7 @@ class ModernWindow(QWidget):
         self.titleBar.setObjectName('titleBar')
         self.titleBar.setSizePolicy(QSizePolicy(QSizePolicy.Preferred,
                                                 QSizePolicy.Fixed))
-        self.titleBar.setFont(QFont('Roboto'))
+        self.titleBar.setFont(QFont(MAIN_FONT, 9, QFont.Light))
 
         self.hboxTitle = QHBoxLayout(self.titleBar)
         self.hboxTitle.setContentsMargins(0, 0, 0, 0)

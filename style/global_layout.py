@@ -7,30 +7,32 @@ GLOBAL_STYLE = 'Fusion'
 # -- Main Window ---
 
 WIN_POS = (600, 200)
-WIN_SIZE = (550, 250)
+WIN_SIZE = (400, 300)
 
 # ---- Elements ----
 
-GLOBAL_WIDTH = int(WIN_SIZE[0]*0.9)
+GLOBAL_WIDTH = int(WIN_SIZE[0])
 INC_BUTTON_WIDTH = 20
-SLIDER_WIDTH = 200
-SLIDER_LABEL_WIDTH = 120
-SLIDER_VALUE_WIDTH = 50
+SLIDER_WIDTH = int(WIN_SIZE[0]*0.5)
+SLIDER_LABEL_WIDTH = int(WIN_SIZE[0]*0.25)
+SLIDER_VALUE_WIDTH = int(WIN_SIZE[0]*0.1)
 SLIDER_TICK_MIN = 15
 SLIDER_RANGE = (0, 255)
 COPYRIGHT_HEIGHT = 20
 
 # ------ Text ------
 
-TEXT_FONT = QFont("Roboto", 11, 500)
-VALUE_FONT = QFont("Roboto", 12, 500)
-DESCRIPRION_FONT = QFont("Roboto", 10)
-COPYRIGHT_FONT = QFont('Roboto', 8)
+MAIN_FONT = 'Calibri'
+
+TEXT_FONT = QFont(MAIN_FONT, 13, QFont.Bold)
+VALUE_FONT = QFont(MAIN_FONT, 14, QFont.Bold)
+DESCRIPRION_FONT = QFont(MAIN_FONT, 11, QFont.Light)
+COPYRIGHT_FONT = QFont(MAIN_FONT, 10, QFont.ExtraLight)
 
 # ---- Spacings ----
 
-H_SPACING = 15
-V_SPACING = 15
+H_SPACING = int(WIN_SIZE[0]*0.03)
+V_SPACING = int(WIN_SIZE[0]*0.03)
 
 # ----- Timers -----
 
