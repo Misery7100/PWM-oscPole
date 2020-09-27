@@ -36,6 +36,7 @@ class Slider(QWidget):
 
         # Add slider
         self.__step = range[-1]
+        self.__max_val = range[1]
         self.__smooth = smooth
         self._slider = SliderControl(type=Qt.Horizontal, widget=self, range=range[:-1], step=self.__step,
                                      width=SLIDER_WIDTH, changed=self.__changeValue, in_val=initial_value)
@@ -49,14 +50,7 @@ class Slider(QWidget):
         self.__minus_timer = TimerWithDelay(object=self._slider, step=self.__step, direction='-')
 
         self._description = SliderText(desc, self, align=Qt.AlignLeft | Qt.AlignTop, font=DESCRIPRION_FONT,
-                                       width=GLOBAL_WIDTH, lim=True, word_wrap=True)
-
-        if last_item: self._description.setObjectName('descriptionLast')
-        else: self._description.setObjectName('description')
-
-        self._description.setVisible(False)
-
-        # Add container and append components
+                                       width=GLOBAL_WIDTH, lim=True, word_wrap=True, desc=True, last=last_item)
 
         slider_box = QHBoxLayout()
         slider_box.addWidget(name_label)
@@ -82,7 +76,7 @@ class Slider(QWidget):
         Slider.__SMOOTH_VALUE[self.__smooth](self._value_label, value, self.__step)
 
         # This shit update pwm value for Arduino
-        # Slider.__INVERSE_PWM[self.__inverse](self.board, self.pin, value, self.range[1])
+        # Slider.__INVERSE_PWM[self.__inverse](self.board, self.__pin, value, self.__max_val)
 
     def __plusStart(self):
         self._slider.setValue(self._slider.value() + self.__step)
@@ -146,20 +140,29 @@ class ToggleButton(QPushButton):
 
 class SliderText(QLabel):
 
+    LIMITED = {True: lambda text, w: text.setMaximumWidth(w),
+               False: lambda text, w: text.setMinimumWidth(w)}
+
+    DESCRIPRION_LAST = {True: lambda text: text.setObjectName('descriptionLast'),
+                        False: lambda text: text.setObjectName('description')}
+
+    DESCRIPTION = {True: lambda text, last: (SliderText.DESCRIPRION_LAST[last](text), text.setVisible(False)),
+                   False: lambda text, last: None}
+
     def __init__(self, label, widget, **kwargs):
         super().__init__(label, widget)
         self.addText(**kwargs)
 
-    def addText(self, align=Qt.AlignCenter, width=0, style=None, font=VALUE_FONT, lim=False, word_wrap=False):
+    def addText(self, align=Qt.AlignCenter, width=0, style=None, font=VALUE_FONT, lim=False, word_wrap=False,
+                last=False, desc=False):
 
         self.setAlignment(align)
-
-        if lim: self.setMaximumWidth(width)
-        else: self.setMinimumWidth(width)
-
         self.setObjectName(style)
         self.setFont(font)
         self.setWordWrap(word_wrap)
+
+        SliderText.LIMITED[lim](self, width)
+        SliderText.DESCRIPTION[desc](self, last)
 
 class SliderControl(QSlider):
 
@@ -185,6 +188,11 @@ class SliderControl(QSlider):
 
 class TimerWithDelay():
 
+    SLIDER_EVENT = {
+        '+': lambda obj, step: lambda: obj.setValue(obj.value() + step),
+        '-': lambda obj, step: lambda: obj.setValue(obj.value() - step)
+    }
+
     def __init__(self, **kwargs):
         self.addTimer(**kwargs)
 
@@ -193,9 +201,7 @@ class TimerWithDelay():
         self.timer = QTimer()
         self.timer.setInterval(timer_int)
 
-        if direction == '+': timeout_event = lambda: object.setValue(object.value() + step)
-        else: timeout_event = lambda: object.setValue(object.value() - step)
-
+        timeout_event = TimerWithDelay.SLIDER_EVENT[direction](object, step)
         self.timer.timeout.connect(timeout_event)
 
         self.delay = QTimer()
