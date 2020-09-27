@@ -1,32 +1,31 @@
-from components import mainWindow, sliderControl, selectControl
-from style import windows
-from PyQt5.QtWidgets import QApplication
-from PyQt5 import QtCore, QtGui
-import sys
+from components.mainWindow import mainWindow
+from components.sliderControl import sliderControl
+from components.selectControl import selectControl
+from style.windows import ModernWindow
+from assets import required
+from assets.app_text import *
+from style.global_layout import GLOBAL_STYLE
 
+from PyQt5.QtWidgets import QApplication
+import sys
 
 def main():
 
     # board = pymata4.Pymata4()
+
     app = QApplication(sys.argv)
-    app.setStyle('Fusion')
-    QtGui.QFontDatabase.addApplicationFont("style/Roboto-Light.ttf")
+    app.setStyle(GLOBAL_STYLE)
 
-    slider_osc = sliderControl.sliderControl(pin=11, initial_value=0, name='Osc amplitude', range=(0,255,1),
-                                          desc='PWM control for a torsion oscillator driving force. '
-                                               'Click buttons or slide to increase or decrease value. '
-                                               '\n\n ⦁ Smooth changing; '
-                                               '\n ⦁ Tick step is 1/15 of PWM maximum value.', inverse=True)
+    required.addRequired()
 
-    slider_damp = sliderControl.sliderControl(pin=6, initial_value=0, name='Damper', range=(0,255,1), last_item=True,
-                                          desc='PWM control for a torsion oscillator damper (magnetic field). '
-                                               'Click buttons or slide to increase or decrease value. '
-                                               '\n\n ⦁ Smooth changing; '
-                                               '\n ⦁ Tick step is 1/15 of PWM maximum value.')
+    slider_osc = sliderControl(pin=11, initial_value=0, name='Osc amplitude', range=(0,255,1),
+                               desc=OSC_SLIDER_DESC, inverse=True)
 
-    window = mainWindow.mainWindow(components = (slider_osc, slider_damp), title='PWM oscPole')
-    mw = windows.ModernWindow(window)
-    mw.show()
+    slider_damp = sliderControl(pin=6, initial_value=0, name='Damper', range=(0,255,1),
+                                desc=DAMP_SLIDER_DESC, last_item=True)
+
+    window = ModernWindow(mainWindow(components = (slider_osc, slider_damp), title='PWM oscPole'))
+    window.show()
 
     sys.exit(app.exec_())
 

@@ -7,7 +7,7 @@ STYLE = '#windowFrame {\
   border-radius: 8px 8px 8px 8px;\
   background: qlineargradient( x1:0 y1:0, x2:0 y2:1, stop:0 rgb(243, 243, 243), stop:1 rgb(226, 226, 226));\
 }\
-#nameLabel {\
+#sliderLabel {\
   color: rgb(20, 20, 20);\
   background-color: none;\
   border: 0px none black;\
@@ -19,6 +19,24 @@ STYLE = '#windowFrame {\
   border-top-right-radius: 8px;\
   background-color: palette(Window);\
   height: 30px;\
+}\
+#description {\
+  color: rgb(50, 50, 50);\
+  border-top: 0px solid qlineargradient( x1:0 y1:0, x2:1 y2:0, stop:0 rgb(230, 230, 230),\
+  stop:0.1 rgb(212, 212, 212), stop:0.9 rgb(212, 212, 212), stop:1 rgb(230, 230, 230));\
+  border-bottom: 1px solid qlineargradient( x1:0 y1:0, x2:1 y2:0, stop:0 rgb(238, 238, 238),\
+  stop:0.2 rgb(212, 212, 212), stop:0.8 rgb(212, 212, 212), stop:1 rgb(238, 238, 238));\
+  padding-top: 15px;\
+  padding-bottom: 20px;\
+}\
+\
+#descriptionLast {\
+  color: rgb(50, 50, 50);\
+  padding-top: 15px;\
+  padding-bottom: 5px;\
+}\
+#sliderValue {\
+  color: rgb(30, 30, 30);\
 }\
 \
 #btnClose, #btnRestore, #btnMaximize, #btnMinimize {\

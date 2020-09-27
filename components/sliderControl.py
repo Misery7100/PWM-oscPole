@@ -1,14 +1,10 @@
 from PyQt5.QtWidgets import (QWidget, QSlider, QHBoxLayout, QVBoxLayout, QGridLayout, QLabel, QPushButton)
 from PyQt5.QtCore import Qt, QTimer
 # from pymata4 import pymata4
-from PyQt5.QtGui import QPixmap, QCursor, QFont
+from PyQt5.QtGui import QCursor, QFont
+from style.global_layout import *
 
 class sliderControl(QWidget):
-
-    _TEXT_FONT = QFont("Roboto", 11, 500)
-    _VALUE_FONT = QFont("Roboto", 12, 500)
-    # _DESC_FONT = QFont('Helvetica [Cronyx]', 9)
-    _DESC_FONT = QFont("Roboto", 10)
 
     __SMOOTH_VALUE = {False: lambda l, v, step: l.setText(str(step*(v // step))),
               True: lambda l, v, step: l.setText(str(v))}
@@ -16,7 +12,7 @@ class sliderControl(QWidget):
     __SMOOTH_SLIDER = {False: lambda s, v, step: s.setValue(step*(v // step)),
               True: lambda s, v, step: None}
 
-    # PWM_WRITE = {False: lambda b, pin, v, m: b.pwm_write(pin, v),
+    # __INVERSE_PWM = {False: lambda b, pin, v, m: b.pwm_write(pin, v),
     #              True: lambda b, pin, v, m: b.pwm_write(pin, m - v)}
 
     def __init__(self, **kwargs):
@@ -24,8 +20,9 @@ class sliderControl(QWidget):
         self.addSlider(**kwargs)
         self.__window = None
 
-    def addSlider(self, pin=11, ptype='d', initial_value=0, range=(0,255,15), inverse=False,
-                  name='Sample slider', smooth=True, desc='Sample text', last_item=False):
+    def addSlider(self, pin=11, ptype='d', initial_value=SLIDER_RANGE[0], range=(*SLIDER_RANGE, SLIDER_TICK_MIN),
+                  inverse=False, name='Sample slider', smooth=True, desc='Sample text', last_item=False):
+
         # Link arduino pin and slider, define inversed or not
         self.__pin = pin
         self.__ptype = ptype
@@ -33,46 +30,44 @@ class sliderControl(QWidget):
 
         # Add slider name label
         name_label = QPushButton(name, self)
-        # name_label.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
-        name_label.setMinimumWidth(120)
-        name_label.setMaximumWidth(120)
-        name_label.setFont(sliderControl._TEXT_FONT)
-        name_label.setObjectName('nameLabel')
+        name_label.setMinimumWidth(SLIDER_LABEL_WIDTH)
+        name_label.setMaximumWidth(SLIDER_LABEL_WIDTH)
+        name_label.setFont(TEXT_FONT)
+        name_label.setObjectName('sliderLabel')
         name_label.setCursor(QCursor(Qt.PointingHandCursor))
         name_label.clicked.connect(self.__toggleVisible)
-        # name_label.setStyleSheet('color: rgb(20, 20, 20); background-color: none; border: 0px none black; text-align: left;')
 
         # Add value displaying
         self._value_label = QLabel(str(initial_value), self)
         self._value_label.setAlignment(Qt.AlignCenter)
-        self._value_label.setMinimumWidth(50)
-        self._value_label.setFont(sliderControl._VALUE_FONT)
-        self._value_label.setStyleSheet('color: rgb(30, 30, 30);')
+        self._value_label.setMinimumWidth(SLIDER_VALUE_WIDTH)
+        self._value_label.setFont(VALUE_FONT)
+        self._value_label.setObjectName('sliderValue')
 
         # Add slider
         self._slider = QSlider(Qt.Horizontal, self)
         self.__step = range[2]
-        self.__smooth = smooth
         self._slider.setRange(range[0], range[1])
         self._slider.setFocusPolicy(Qt.NoFocus)
         self._slider.setPageStep(self.__step)
         self._slider.setValue(initial_value)
-        self._slider.setTickInterval(self.__step if self.__step > 15 else 15)
+        self._slider.setTickInterval(self.__step if self.__step > SLIDER_TICK_MIN else SLIDER_TICK_MIN)
         self._slider.setTickPosition(QSlider.TicksBothSides)
         self._slider.setSingleStep(self.__step)
         self._slider.valueChanged.connect(self.__changeValue)
-        self._slider.setMaximumWidth(200)
-        self._slider.setMinimumWidth(200)
+        self._slider.setMaximumWidth(SLIDER_WIDTH)
+        self._slider.setMinimumWidth(SLIDER_WIDTH)
+        self.__smooth = smooth
 
         # Add +/- buttons with events
         plus_btn = QPushButton('+', self)
-        plus_btn.setMaximumWidth(20)
+        plus_btn.setMaximumWidth(INC_BUTTON_WIDTH)
         plus_btn.pressed.connect(self.__plusStart)
         plus_btn.released.connect(self.__plusStop)
         plus_btn.setCursor(QCursor(Qt.PointingHandCursor))
 
         minus_btn = QPushButton('-', self)
-        minus_btn.setMaximumWidth(20)
+        minus_btn.setMaximumWidth(INC_BUTTON_WIDTH)
         minus_btn.pressed.connect(self.__minusStart)
         minus_btn.released.connect(self.__minusStop)
         minus_btn.setCursor(QCursor(Qt.PointingHandCursor))
@@ -80,7 +75,7 @@ class sliderControl(QWidget):
         # Add timers for +/- buttons
         self.__timers = [QTimer(), QTimer()]
         for timer in self.__timers:
-            timer.setInterval(50)
+            timer.setInterval(ITERATE_INTERVAL)
 
         self.__timers[0].timeout.connect(lambda: self._slider.setValue(self._slider.value() - self.__step))
         self.__timers[1].timeout.connect(lambda: self._slider.setValue(self._slider.value() + self.__step))
@@ -88,7 +83,7 @@ class sliderControl(QWidget):
         self.__delays = [QTimer(), QTimer()]
         for timer in self.__delays:
             timer.setSingleShot(True)
-            timer.setInterval(600)
+            timer.setInterval(DELAY_INTERVAL)
 
         self.__delays[0].timeout.connect(lambda: self.__timers[0].start())
         self.__delays[1].timeout.connect(lambda: self.__timers[1].start())
@@ -96,34 +91,21 @@ class sliderControl(QWidget):
         # Add slider container and append components
         slider_box = QHBoxLayout()
         slider_box.addWidget(name_label)
-        slider_box.addSpacing(15)
+        slider_box.addSpacing(H_SPACING)
         slider_box.addWidget(self._slider)
-        slider_box.addSpacing(15)
+        slider_box.addSpacing(H_SPACING)
         slider_box.addWidget(minus_btn)
         slider_box.addWidget(self._value_label)
         slider_box.addWidget(plus_btn)
 
         self._description = QLabel(desc, self)
-        self._description.setFont(sliderControl._DESC_FONT)
+        self._description.setFont(DESCRIPRION_FONT)
         self._description.setAlignment(Qt.AlignLeft | Qt.AlignTop)
-        self._description.setMaximumWidth(500)
+        self._description.setMaximumWidth(GLOBAL_WIDTH)
         self._description.setWordWrap(True)
-        if last_item:
-            self._description.setStyleSheet(
-                                  'color: rgb(50, 50, 50); '
-                                  'padding-top: 15px;'
-                                  'padding-bottom: 5px;'
-                                  )
-        else:
-            self._description.setStyleSheet(
-                'color: rgb(50, 50, 50); '
-                'border-top: 0px solid qlineargradient( x1:0 y1:0, x2:1 y2:0, stop:0 rgb(230, 230, 230),'
-                'stop:0.1 rgb(212, 212, 212), stop:0.9 rgb(212, 212, 212), stop:1 rgb(230, 230, 230));'
-                'border-bottom: 1px solid qlineargradient( x1:0 y1:0, x2:1 y2:0, stop:0 rgb(238, 238, 238),'
-                'stop:0.2 rgb(212, 212, 212), stop:0.8 rgb(212, 212, 212), stop:1 rgb(238, 238, 238));'
-                'padding-top: 15px;'
-                'padding-bottom: 20px;'
-            )
+
+        if last_item: self._description.setObjectName('descriptionLast')
+        else: self._description.setObjectName('description')
 
         self._description.setVisible(False)
 
@@ -131,10 +113,9 @@ class sliderControl(QWidget):
         desc_box.addWidget(self._description)
 
         self.container = QVBoxLayout()
-        self.container.addSpacing(15)
+        self.container.addSpacing(V_SPACING)
         self.container.addLayout(slider_box)
         self.container.addLayout(desc_box)
-        # self.container.setAlignment(Qt.AlignTop)
 
     def __changeValue(self, value, board=None):
 
@@ -143,7 +124,7 @@ class sliderControl(QWidget):
         sliderControl.__SMOOTH_VALUE[self.__smooth](self._value_label, value, self.__step)
 
         # This shit update pwm value for Arduino
-        # sliderControl.PWM_WRITE[self.__inverse](self.board, self.pin, value, self.range[1])
+        # sliderControl.__INVERSE_PWM[self.__inverse](self.board, self.pin, value, self.range[1])
 
     def __plusStart(self):
         self._slider.setValue(self._slider.value() + self.__step)
