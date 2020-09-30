@@ -32,7 +32,7 @@ class Window(QWidget):
 
 class Copyright(QLabel):
 
-    __CR = '© Saint Petersburg State University, 2020'
+    __CR = '© Физический факультет СПбГУ, 2020'
 
     def __init__(self, widget):
         super().__init__(Copyright.__CR, widget)

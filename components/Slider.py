@@ -1,23 +1,18 @@
-from PyQt5.QtWidgets import (QWidget, QSlider, QHBoxLayout, QVBoxLayout, QLabel, QPushButton)
+from PyQt5.QtWidgets import (QWidget, QSlider, QHBoxLayout, QVBoxLayout, QLabel, QPushButton, QLineEdit)
 from PyQt5.QtCore import Qt, QTimer
-# from pymata4 import pymata4
-from PyQt5.QtGui import QCursor, QFont
+from PyQt5.QtGui import QCursor, QFont, QIntValidator, QPalette, QColor
 from style.global_layout import *
 
 class Slider(QWidget):
 
-    __SMOOTH_VALUE = {False: lambda l, v, step: l.setText(str(step*(v // step))),
-              True: lambda l, v, step: l.setText(str(v))}
+    __INVERSE_PWM = {False: lambda b, pin, v, m: b.pwm_write(pin, v),
+                 True: lambda b, pin, v, m: b.pwm_write(pin, m - v)}
 
-    __SMOOTH_SLIDER = {False: lambda s, v, step: s.setValue(step*(v // step)),
-              True: lambda s, v, step: None}
+    __PIN_TYPE = {'pwm': lambda b, p: b.set_pin_mode_pwm_output(p),
+                  'servo': lambda b, p: b.set_pin_mode_servo(p)}
 
-    # __SMOOTH_PWM = {True: lambda b, pin, v, m, step, inv: Slider.__INVERSE_PWM[inv](b, pin, v, m),
-    #                 False: lambda b, pin, v, m, step, inv: Slider.__INVERSE_PWM[inv](b, pin, step*(v // step), m)}
-    #
-    # __INVERSE_PWM = {False: lambda b, pin, v, m: b.pwm_write(pin, v),
-    #              True: lambda b, pin, v, m: b.pwm_write(pin, m - v)}
-
+    __INITIAL = {True: lambda b, pin, range: b.pwm_write(pin, range[1]),
+                False: lambda b, pin, range: b.pwm_write(pin, range[0])}
 
     def __init__(self, **kwargs):
         super().__init__()
@@ -25,18 +20,25 @@ class Slider(QWidget):
         self.__window = None
 
     def addSlider(self, pin=11, ptype='d', initial_value=SLIDER_RANGE[0], range=(*SLIDER_RANGE, SLIDER_TICK_MIN),
-                  inverse=False, name='Sample slider', smooth=True, desc='Sample text', last_item=False):
+                  inverse=False, name='Sample slider', smooth=True, desc='Sample text', last_item=False,
+                  board=None):
 
         # Link arduino pin and slider, define inversed or not
         self.__pin = pin
         self.__ptype = ptype
         self.__inverse = inverse
+        self.board = board
+
+        # Setting up pins
+        Slider.__PIN_TYPE[self.__ptype](self.board, self.__pin)
+        Slider.__INITIAL[self.__inverse](self.board, self.__pin, range[:-1])
 
         # Add slider name label
         name_label = ToggleButton(name, self, clicked=self.__toggleVisible, style='sliderLabel', width=SLIDER_LABEL_WIDTH)
 
         # Add value displaying
-        self._value_label = SliderText(str(initial_value), self, width=SLIDER_VALUE_WIDTH, style='sliderValue', lim=True)
+        self._value_label = ValueLabel(label=str(initial_value), widget=self, edit_end=self.__lineEdit,
+                                       enter_press=lambda: self._value_label.clearFocus())
 
         # Add slider
         self.__step = range[-1]
@@ -54,7 +56,7 @@ class Slider(QWidget):
         self.__minus_timer = TimerWithDelay(object=self._slider, step=self.__step, direction='-')
 
         self._description = SliderText(desc, self, align=Qt.AlignLeft | Qt.AlignTop, font=DESCRIPRION_FONT,
-                                       width=GLOBAL_WIDTH, lim=True, word_wrap=True, desc=True, last=last_item)
+                                       width=GLOBAL_WIDTH, word_wrap=True, last=last_item)
 
         slider_box = QHBoxLayout()
         slider_box.addWidget(name_label)
@@ -75,14 +77,17 @@ class Slider(QWidget):
         self.container.addLayout(slider_box)
         self.container.addLayout(desc_box)
 
+    def __lineEdit(self):
+
+        self._slider.setValue(int(self._value_label.text()))
+
     def __changeValue(self, value, board=None):
 
         # Smooth or not slider updating
-        Slider.__SMOOTH_SLIDER[self.__smooth](self._slider, value, self.__step)
-        Slider.__SMOOTH_VALUE[self.__smooth](self._value_label, value, self.__step)
+        self._value_label.setText(str(value))
 
-        # This shit update pwm value for Arduino
-        # Slider.__SMOOTH_PWM[self.__smooth](self.board, self.__pin, value, self.__max_val, self.__step, self.__inverse)
+        # Update pwm value for Arduino
+        Slider.__INVERSE_PWM[self.__inverse](self.board, self.__pin, value, self.__max_val)
 
     def __plusStart(self):
         self._slider.setValue(self._slider.value() + self.__step)
@@ -105,6 +110,22 @@ class Slider(QWidget):
             self._description.setVisible(False)
         else:
             self._description.setVisible(True)
+
+class ValueLabel(QLineEdit):
+
+    def __init__(self, label, widget, **kwargs):
+        super().__init__(label, widget)
+        self.addValueLabel(**kwargs)
+
+    def addValueLabel(self, align=Qt.AlignCenter, font=VALUE_FONT, range=(0, 255), enter_press=lambda: None,
+                      edit_end=lambda: None):
+
+        self.setFont(VALUE_FONT)
+        self.setValidator(QIntValidator(*range))
+        self.setAlignment(align)
+
+        self.editingFinished.connect(edit_end)
+        self.returnPressed.connect(enter_press)
 
 class ControlButton(QPushButton):
 
@@ -146,29 +167,25 @@ class ToggleButton(QPushButton):
 
 class SliderText(QLabel):
 
-    __LIMITED = {True: lambda text, w: (text.setMaximumWidth(w), text.setMinimumWidth(w)),
-               False: lambda text, w: text.setMinimumWidth(w)}
-
-    __DESCRIPRION_LAST = {True: lambda text: text.setObjectName('descriptionLast'),
+    __LAST = {True: lambda text: text.setObjectName('descriptionLast'),
                         False: lambda text: text.setObjectName('description')}
-
-    __DESCRIPTION = {True: lambda text, last: (SliderText.__DESCRIPRION_LAST[last](text), text.setVisible(False)),
-                   False: lambda text, last: None}
 
     def __init__(self, label, widget, **kwargs):
         super().__init__(label, widget)
         self.addText(**kwargs)
 
-    def addText(self, align=Qt.AlignCenter, width=0, style=None, font=VALUE_FONT, lim=False, word_wrap=False,
-                last=False, desc=False):
+    def addText(self, align=Qt.AlignCenter, width=0, style=None, font=VALUE_FONT, word_wrap=False, last=False):
 
         self.setAlignment(align)
         self.setObjectName(style)
         self.setFont(font)
         self.setWordWrap(word_wrap)
 
-        SliderText.__LIMITED[lim](self, width)
-        SliderText.__DESCRIPTION[desc](self, last)
+        SliderText.__LAST[last](self)
+
+        self.setMaximumWidth(width)
+        self.setMinimumWidth(width)
+        self.setVisible(False)
 
 class SliderControl(QSlider):
 

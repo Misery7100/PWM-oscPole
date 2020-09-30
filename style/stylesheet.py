@@ -73,5 +73,6 @@ STYLE = '#windowFrame {\
   background-color: hsv(0, 182, 152);\
 }\
 \
+\
 #btnClose::disabled, #btnRestore::disabled, #btnMaximize::disabled, #btnMinimize::disabled {\
   background-color: palette(midlight);}'
